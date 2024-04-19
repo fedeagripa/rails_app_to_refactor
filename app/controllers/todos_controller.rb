@@ -19,6 +19,7 @@ class TodosController < ApplicationController
     render_json(200, todos:)
   end
 
+  # TODO: try to use :verbose instead of 201 or 422 (eg: :created, :unprocessable_entity) 
   def create
     todo = @todos.create(todo_params.except(:completed))
 

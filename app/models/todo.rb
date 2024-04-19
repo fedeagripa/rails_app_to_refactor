@@ -1,16 +1,21 @@
 # frozen_string_literal: true
 
+# Discuss: using annotate gem to add model schema on top of file
 class Todo < ApplicationRecord
   attr_accessor :completed
 
+  # TODO: Remove the required: true flag, is already default for belongs_to.
+  # Also for adding non required should use ==> optional: true
   belongs_to :todo_list, required: true, inverse_of: :todos
 
   has_one :user, through: :todo_list
 
+  # Discuss: AASM gem for state management
   scope :overdue, -> { incomplete.where('due_at <= ?', Time.current) }
   scope :completed, -> { where.not(completed_at: nil) }
   scope :incomplete, -> { where(completed_at: nil) }
 
+  # TODO: Change params to status and receive the proper status in the scope
   scope :filter_by_status, ->(params) {
     case params[:status]&.strip&.downcase
     when 'overdue' then overdue
@@ -55,6 +60,7 @@ class Todo < ApplicationRecord
     !incomplete?
   end
 
+  # TODO: try to use enums instead of strings for statuses
   def status
     return 'completed' if completed?
     return 'overdue' if overdue?

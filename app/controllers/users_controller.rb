@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+# TODO: This can be compelely inherited from devise and override only some things for registration if needed.
 class UsersController < ApplicationController
+  # TODO: enforce usage of strong_params in separate methods
+  # Also try to do User.create!(user_params) -> will be faster and more performance regarding memory than new + save
   def create
     user_params = params.require(:user).permit(:name, :email, :password, :password_confirmation)
 
@@ -47,11 +50,11 @@ class UsersController < ApplicationController
 
   private
 
-    def perform_if_authenticated(&block)
-      authenticate_user do
-        block.call if block
+  def perform_if_authenticated(&block)
+    authenticate_user do
+      block.call if block
 
-        render_json(200, user: { email: current_user.email })
-      end
+      render_json(200, user: { email: current_user.email })
     end
+  end
 end

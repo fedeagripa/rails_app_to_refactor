@@ -13,6 +13,7 @@ class ApplicationController < ActionController::API
       head :unauthorized
     end
 
+    # TODO: go with devise way to dont reinvent the wheel
     def current_user
       @current_user ||= authenticate_with_http_token do |token|
         User.find_by(token: token)

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TodoListsController < ApplicationController
+  # TODO: It will be nice to move this to application_controller or even an api_controller so we define there what needs to be authed and what not
+  # And then just skip_before_action for exceptions on each controller
   before_action :authenticate_user
 
   before_action :set_todo_lists
@@ -10,6 +12,7 @@ class TodoListsController < ApplicationController
     render_json(404, todo_list: { id: not_found.id, message: 'not found' })
   end
 
+  # TODO: Try to use a decorator like jbuilder or similar to decorate responses
   def index
     todo_lists = @todo_lists.order_by(params).map(&:serialize_as_json)
 
